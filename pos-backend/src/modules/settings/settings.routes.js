@@ -3,6 +3,7 @@ const fs = require('node:fs/promises');
 const path = require('node:path');
 const { z } = require('zod');
 const prisma = require('../../config/prisma');
+const { resolveDataPath } = require('../../config/runtimePaths');
 const { authenticate, authorize, requireBranchAccess } = require('../../middleware/auth');
 const { requirePermissions } = require('../../middleware/featurePermission');
 const { AppError } = require('../../utils/errors');
@@ -133,7 +134,7 @@ const serializeBackupLog = (row) => ({
   completedAt: row.completedAt?.toISOString?.() || row.completedAt || null,
 });
 
-const backupDir = path.join(process.cwd(), 'backups');
+const backupDir = resolveDataPath('backups');
 const toPublicBackupPath = (filename) => `/api/settings/backups/${filename}`;
 const toDiskBackupPath = (source) => {
   const normalized = String(source || '').replace(/\\/g, '/');

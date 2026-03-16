@@ -3,10 +3,10 @@ const express = require('express');
 const helmet = require('helmet');
 const cors = require('cors');
 const morgan = require('morgan');
-const path = require('path');
 const rateLimit = require('express-rate-limit');
 
 const logger = require('./config/logger');
+const { ensureDataDirSync } = require('./config/runtimePaths');
 const errorHandler = require('./middleware/errorHandler');
 const { notFound } = require('./middleware/notFound');
 
@@ -61,7 +61,7 @@ app.use('/api/auth/login', authLimiter);
 
 // Static upload files
 // Must be registered before JSON parser so multipart requests stay untouched.
-app.use('/uploads', express.static(path.join(process.cwd(), 'uploads'), {
+app.use('/uploads', express.static(ensureDataDirSync('uploads'), {
   maxAge: '7d',
   etag: true,
   setHeaders: (res) => {

@@ -678,7 +678,6 @@ enum OrderStatus {
   DRAFT
   PENDING_PAYMENT
   PAID
-  FULFILLED
   CANCELLED
   VOID
 }

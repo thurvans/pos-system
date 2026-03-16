@@ -2,10 +2,10 @@ const multer = require('multer');
 const path   = require('path');
 const fs     = require('fs');
 const crypto = require('crypto');
+const { ensureDataDirSync } = require('../config/runtimePaths');
 
 // ── Folder uploads ────────────────────────────────────────────
-const UPLOAD_DIR = path.join(process.cwd(), 'uploads', 'products');
-if (!fs.existsSync(UPLOAD_DIR)) fs.mkdirSync(UPLOAD_DIR, { recursive: true });
+const UPLOAD_DIR = ensureDataDirSync('uploads', 'products');
 
 // ── Multer: simpan ke memory dulu ─────────────────────────────
 const storage = multer.memoryStorage();

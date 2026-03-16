@@ -13,6 +13,7 @@ const readBase = () => (
 )
 
 const BASE = ensureApiSuffix(readBase())
+const PUBLIC_BASE = BASE.endsWith('/api') ? BASE.slice(0, -4) : BASE
 const ABSOLUTE_URL_PATTERN = /^https?:\/\//i
 
 const getToken = () => localStorage.getItem('token')
@@ -32,6 +33,16 @@ const buildUrl = (path = '') => {
   const normalized = toApiPath(path)
   if (ABSOLUTE_URL_PATTERN.test(normalized)) return normalized
   return `${BASE}${normalized}`
+}
+
+export const buildAssetUrl = (path = '') => {
+  const value = String(path || '').trim()
+  if (!value) return ''
+  if (ABSOLUTE_URL_PATTERN.test(value)) return value
+
+  const withLeadingSlash = value.startsWith('/') ? value : `/${value}`
+  if (!PUBLIC_BASE) return withLeadingSlash
+  return `${PUBLIC_BASE}${withLeadingSlash}`
 }
 
 const handleUnauthorized = () => {

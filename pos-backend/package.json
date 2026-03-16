@@ -5,6 +5,7 @@
   "main": "src/app.js",
   "scripts": {
     "dev": "nodemon src/app.js",
+    "build": "npm run db:generate",
     "start": "node src/app.js",
     "db:generate": "prisma generate --schema prisma/schema.prisma",
     "db:migrate": "prisma migrate deploy --schema prisma/schema.prisma",
@@ -14,7 +15,8 @@
     "db:check:permissions": "node src/prisma/check-permissions.js",
     "db:seed:shift": "node src/prisma/seed-shift.js",
     "setup": "npm install && npm run db:generate && npm run db:migrate:dev -- --name init_db && node src/prisma/seed.js",
-    "db:reset": "prisma migrate reset --force --schema prisma/schema.prisma"
+    "db:reset": "prisma migrate reset --force --schema prisma/schema.prisma",
+    "postinstall": "npm run db:generate"
   },
   "dependencies": {
     "@prisma/client": "^5.14.0",

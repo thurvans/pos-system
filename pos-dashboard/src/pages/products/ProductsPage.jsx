@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { api } from '@/api/client'
+import { api, buildAssetUrl } from '@/api/client'
 import { useAuth } from '@/hooks/useAuth'
 import { PERMISSIONS } from '@/lib/permissions'
 import { Card, Button, Badge, Table, Th, Td, Modal, Input, Select, PageHeader, Empty, Spinner } from '@/components/ui'
@@ -21,8 +21,7 @@ const AVAILABILITY_BADGE = {
 
 const resolveImg = (url) => {
   if (!url) return null
-  if (String(url).startsWith('http')) return url
-  return String(url).startsWith('/') ? url : `/${url}`
+  return buildAssetUrl(url)
 }
 
 const canUseVariantPricing = (menu) => {

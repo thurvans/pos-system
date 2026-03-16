@@ -766,7 +766,6 @@ exports.OrderStatus = exports.$Enums.OrderStatus = {
   DRAFT: 'DRAFT',
   PENDING_PAYMENT: 'PENDING_PAYMENT',
   PAID: 'PAID',
-  FULFILLED: 'FULFILLED',
   CANCELLED: 'CANCELLED',
   VOID: 'VOID'
 };
