@@ -1,0 +1,51 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 220 16% 6%;
+    --foreground: 210 20% 92%;
+    --card: 220 14% 9%;
+    --card-foreground: 210 20% 92%;
+    --popover: 220 14% 9%;
+    --popover-foreground: 210 20% 92%;
+    --primary: 158 64% 52%;
+    --primary-foreground: 220 16% 6%;
+    --secondary: 220 12% 14%;
+    --secondary-foreground: 210 20% 80%;
+    --muted: 220 12% 14%;
+    --muted-foreground: 215 12% 50%;
+    --accent: 220 12% 16%;
+    --accent-foreground: 210 20% 92%;
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 220 12% 14%;
+    --input: 220 12% 14%;
+    --ring: 158 64% 52%;
+    --radius: 0.5rem;
+    --emerald: #34d399;
+    --amber: #fbbf24;
+    --rose: #fb7185;
+    --blue: #60a5fa;
+  }
+  * { border-color: hsl(var(--border)); }
+  body { background-color: hsl(var(--background)); color: hsl(var(--foreground)); font-family: 'DM Sans', sans-serif; -webkit-font-smoothing: antialiased; }
+  ::-webkit-scrollbar { width: 4px; height: 4px; }
+  ::-webkit-scrollbar-track { background: hsl(var(--background)); }
+  ::-webkit-scrollbar-thumb { background: hsl(220 12% 20%); border-radius: 99px; }
+}
+
+@layer utilities {
+  .shimmer { background: linear-gradient(90deg, hsl(var(--card)) 25%, hsl(220 14% 13%) 50%, hsl(var(--card)) 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; }
+  @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+  .fade-in { animation: fadeIn 0.3s ease-out; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+  .nav-active { background: hsl(158 64% 52% / 0.12); color: var(--emerald); border-left: 2px solid var(--emerald); }
+  .money { font-family: 'JetBrains Mono', monospace; letter-spacing: -0.02em; }
+  .badge-green  { background: hsl(158 64% 52% / 0.15); color: var(--emerald); }
+  .badge-amber  { background: hsl(45 96% 53% / 0.15);  color: var(--amber); }
+  .badge-rose   { background: hsl(350 89% 60% / 0.15); color: var(--rose); }
+  .badge-blue   { background: hsl(213 94% 68% / 0.15); color: var(--blue); }
+  .badge-muted  { background: hsl(var(--muted)); color: hsl(var(--muted-foreground)); }
+}

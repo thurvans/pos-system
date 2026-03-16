@@ -1,0 +1,88 @@
+{
+  "version": 1,
+  "createdAt": "2026-03-01T09:28:37.935Z",
+  "scope": {
+    "branchId": null,
+    "requestedBy": "e6a3407b-6119-48b9-a3a2-eeed0cc429b5"
+  },
+  "data": {
+    "businessProfiles": [
+      {
+        "id": "fd5a4ee0-9e1e-4c6f-a2dd-06ce80efb5f3",
+        "name": "POS Rasa Nusantara",
+        "logoUrl": null,
+        "address": "Jl. Sudirman No. 1, Jakarta",
+        "phone": "021-12345678",
+        "email": "halo@rasanusantara.id",
+        "taxNumber": null,
+        "taxRate": "11",
+        "serviceChargeRate": "5",
+        "currency": "IDR",
+        "branchId": "a28160db-68f9-4180-8f3b-2a4d8707b724"
+      },
+      {
+        "id": "177f95e2-ee53-47aa-8a1a-b57e063d0d8a",
+        "name": "POS Rasa Nusantara",
+        "logoUrl": null,
+        "address": "Jl. Sudirman No. 1, Jakarta",
+        "phone": "021-12345678",
+        "email": "halo@rasanusantara.id",
+        "taxNumber": null,
+        "taxRate": "11",
+        "serviceChargeRate": "2",
+        "currency": "IDR",
+        "branchId": null
+      }
+    ],
+    "paymentMethods": [
+      {
+        "branchId": "a28160db-68f9-4180-8f3b-2a4d8707b724",
+        "method": "CASH",
+        "isActive": true,
+        "configuration": null
+      },
+      {
+        "branchId": "a28160db-68f9-4180-8f3b-2a4d8707b724",
+        "method": "QRIS",
+        "isActive": true,
+        "configuration": null
+      },
+      {
+        "branchId": "a28160db-68f9-4180-8f3b-2a4d8707b724",
+        "method": "VIRTUAL_ACCOUNT",
+        "isActive": true,
+        "configuration": null
+      },
+      {
+        "branchId": "a28160db-68f9-4180-8f3b-2a4d8707b724",
+        "method": "CARD",
+        "isActive": true,
+        "configuration": null
+      }
+    ],
+    "printers": [
+      {
+        "id": "20e4df7e-4309-4129-90b4-7658f2f6cafd",
+        "branchId": "a28160db-68f9-4180-8f3b-2a4d8707b724",
+        "name": "Printer Kasir Utama",
+        "printerType": "ESC_POS",
+        "connectionInfo": {
+          "ip": "192.168.1.50",
+          "port": 9100,
+          "type": "network"
+        },
+        "isActive": true
+      }
+    ],
+    "invoices": [
+      {
+        "branchId": "a28160db-68f9-4180-8f3b-2a4d8707b724",
+        "headerText": "Terima kasih telah berkunjung",
+        "footerText": "Simpan struk ini untuk komplain",
+        "showLogo": true,
+        "showTaxBreakdown": true,
+        "prefix": "POS"
+      }
+    ]
+  }
+}
