@@ -8,19 +8,17 @@ const { AppError } = require('../../utils/errors');
 const router = express.Router();
 
 const TABLE_STATUSES = ['AVAILABLE', 'OCCUPIED', 'RESERVED', 'OUT_OF_SERVICE'];
-const ACTIVE_ORDER_STATUSES = ['DRAFT', 'PENDING_PAYMENT', 'PAID'];
+const ACTIVE_ORDER_STATUSES = ['DRAFT', 'PENDING_PAYMENT'];
 
 const createTableSchema = z.object({
   branchId: z.string().uuid('branchId tidak valid').optional(),
   name: z.string().trim().min(1, 'Nama meja wajib').max(30, 'Nama meja maksimal 30 karakter'),
-  capacity: z.number().int().min(1).max(50).optional(),
   status: z.enum(TABLE_STATUSES).optional(),
   isActive: z.boolean().optional(),
 });
 
 const updateTableSchema = z.object({
   name: z.string().trim().min(1, 'Nama meja wajib').max(30, 'Nama meja maksimal 30 karakter').optional(),
-  capacity: z.number().int().min(1).max(50).optional(),
   status: z.enum(TABLE_STATUSES).optional(),
   isActive: z.boolean().optional(),
 });
@@ -33,8 +31,19 @@ const activeSchema = z.object({
   isActive: z.boolean(),
 });
 
+const bulkSchema = z.object({
+  branchId: z.string().uuid('branchId tidak valid').optional(),
+  names: z.array(z.string().trim().min(1)).optional(),
+  raw: z.string().optional(),
+});
+
 const normalizeTableName = (value = '') => String(value).trim();
 const normalizeKey = (value = '') => normalizeTableName(value).toUpperCase();
+const splitRawNames = (raw = '') =>
+  String(raw)
+    .split(/\r?\n|,/g)
+    .map((value) => normalizeTableName(value))
+    .filter(Boolean);
 
 const getEffectiveTableStatus = (status, occupiedByActiveOrder = false) => {
   const normalizedStatus = String(status || 'AVAILABLE').toUpperCase();
@@ -50,7 +59,6 @@ const serializeTable = (row, extras = {}) => ({
   branch_id: row.branchId,
   branchId: row.branchId,
   name: row.name,
-  capacity: row.capacity,
   status: row.status,
   is_active: row.isActive,
   isActive: row.isActive,
@@ -179,7 +187,6 @@ router.get('/runtime', async (req, res, next) => {
       return {
         id: table.id,
         name: table.name,
-        capacity: table.capacity,
         status: effectiveStatus,
         base_status: table.status,
         baseStatus: table.status,
@@ -203,25 +210,30 @@ router.get('/runtime', async (req, res, next) => {
   }
 });
 
-router.use(
+router.get(
+  '/occupancy',
   authorize('MANAGER', 'SUPER_ADMIN'),
-  requirePermissions('DASHBOARD_OCCUPANCY')
+  requirePermissions('DASHBOARD_OCCUPANCY'),
+  async (req, res, next) => {
+    try {
+      const branchId = resolveBranchId(req, req.query.branch_id || req.branchId);
+      if (!branchId) throw new AppError('branch_id wajib', 422);
+
+      const summary = await buildOccupancy(branchId);
+      res.json({
+        branchId,
+        ...summary,
+      });
+    } catch (err) {
+      next(err);
+    }
+  }
 );
 
-router.get('/occupancy', async (req, res, next) => {
-  try {
-    const branchId = resolveBranchId(req, req.query.branch_id || req.branchId);
-    if (!branchId) throw new AppError('branch_id wajib', 422);
-
-    const summary = await buildOccupancy(branchId);
-    res.json({
-      branchId,
-      ...summary,
-    });
-  } catch (err) {
-    next(err);
-  }
-});
+router.use(
+  authorize('MANAGER', 'SUPER_ADMIN'),
+  requirePermissions('TABLE_MANAGE')
+);
 
 router.get('/', async (req, res, next) => {
   try {
@@ -291,7 +303,6 @@ router.post('/', async (req, res, next) => {
       data: {
         branchId,
         name: normalizeTableName(body.name),
-        capacity: body.capacity || 4,
         status: body.status || 'AVAILABLE',
         isActive: body.isActive ?? true,
       },
@@ -325,7 +336,6 @@ router.put('/:id', async (req, res, next) => {
       where: { id: req.params.id },
       data: {
         ...(body.name !== undefined && { name: normalizeTableName(body.name) }),
-        ...(body.capacity !== undefined && { capacity: body.capacity }),
         ...(body.status !== undefined && { status: body.status }),
         ...(body.isActive !== undefined && { isActive: body.isActive }),
       },
@@ -409,6 +419,52 @@ router.delete('/:id', async (req, res, next) => {
     res.json({
       ...serializeTable(updated),
       message: 'Meja dinonaktifkan',
+    });
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.post('/bulk', async (req, res, next) => {
+  try {
+    const body = bulkSchema.parse(req.body);
+    const branchId = resolveBranchId(req, body.branchId || req.branchId);
+    if (!branchId) throw new AppError('branchId wajib', 422);
+
+    const fromRaw = body.raw ? splitRawNames(body.raw) : [];
+    const fromNames = (body.names || []).map((name) => normalizeTableName(name));
+    const requested = [...fromRaw, ...fromNames].filter(Boolean);
+
+    const uniqueMap = new Map();
+    for (const name of requested) {
+      const key = normalizeKey(name);
+      if (!key) continue;
+      uniqueMap.set(key, name);
+    }
+
+    const uniqueNames = [...uniqueMap.values()].slice(0, 200);
+    if (!uniqueNames.length) {
+      throw new AppError('Nama meja wajib diisi', 422);
+    }
+
+    const payload = uniqueNames.map((name) => ({
+      branchId,
+      name,
+      status: 'AVAILABLE',
+      isActive: true,
+    }));
+
+    const created = await prisma.diningTable.createMany({
+      data: payload,
+      skipDuplicates: true,
+    });
+
+    res.status(201).json({
+      branchId,
+      requestedCount: requested.length,
+      uniqueCount: uniqueNames.length,
+      createdCount: created.count,
+      names: uniqueNames,
     });
   } catch (err) {
     next(err);

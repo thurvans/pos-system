@@ -413,7 +413,6 @@ exports.Prisma.ShiftScheduleScalarFieldEnum = {
 exports.Prisma.DiningTableScalarFieldEnum = {
   id: 'id',
   name: 'name',
-  capacity: 'capacity',
   status: 'status',
   isActive: 'isActive',
   createdAt: 'createdAt',
@@ -454,6 +453,8 @@ exports.Prisma.OrderItemScalarFieldEnum = {
   discount: 'discount',
   subtotal: 'subtotal',
   hppSubtotal: 'hppSubtotal',
+  orderBatchNumber: 'orderBatchNumber',
+  kitchenPrintedAt: 'kitchenPrintedAt',
   modifierSnapshot: 'modifierSnapshot',
   note: 'note',
   orderId: 'orderId',
@@ -683,6 +684,7 @@ exports.FeaturePermission = exports.$Enums.FeaturePermission = {
   DASHBOARD_TOP_PRODUCTS: 'DASHBOARD_TOP_PRODUCTS',
   DASHBOARD_OCCUPANCY: 'DASHBOARD_OCCUPANCY',
   DASHBOARD_ACTIVE_ORDERS: 'DASHBOARD_ACTIVE_ORDERS',
+  TABLE_MANAGE: 'TABLE_MANAGE',
   MENU_CATEGORY_MANAGE: 'MENU_CATEGORY_MANAGE',
   MENU_ITEM_MANAGE: 'MENU_ITEM_MANAGE',
   MENU_VARIANT_MANAGE: 'MENU_VARIANT_MANAGE',
@@ -780,8 +782,7 @@ exports.OrderFulfillmentStatus = exports.$Enums.OrderFulfillmentStatus = {
 
 exports.OrderType = exports.$Enums.OrderType = {
   DINE_IN: 'DINE_IN',
-  TAKE_AWAY: 'TAKE_AWAY',
-  DELIVERY: 'DELIVERY'
+  TAKE_AWAY: 'TAKE_AWAY'
 };
 
 exports.PaymentMethod = exports.$Enums.PaymentMethod = {

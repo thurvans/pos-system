@@ -66,6 +66,7 @@ const normalizeOrderStatus = (status) => (
 
 const serializeOrder = (o) => {
   if (!o) return null;
+  const unprintedOrderItems = (o.items ?? []).filter((item) => !item.kitchenPrintedAt);
   return {
     id: o.id,
     receipt_number: o.receiptNumber,
@@ -104,6 +105,10 @@ const serializeOrder = (o) => {
     shift_id: o.shiftId ?? null,
     created_at: o.createdAt?.toISOString(),
     createdAt: o.createdAt?.toISOString(),
+    has_unprinted_order_items: unprintedOrderItems.length > 0,
+    hasUnprintedOrderItems: unprintedOrderItems.length > 0,
+    unprinted_order_items_count: unprintedOrderItems.length,
+    unprintedOrderItemsCount: unprintedOrderItems.length,
     cashier: o.cashier ?? null,
     items: (o.items ?? []).map(serializeOrderItem),
     payments: (o.payments ?? []).map(serializePayment),
@@ -148,6 +153,13 @@ const serializeOrderItem = (i) => {
     unitPrice: Number(i.unitPrice),
     discount: Number(i.discount ?? 0),
     subtotal: Number(i.subtotal),
+    hpp_subtotal: Number(i.hppSubtotal ?? 0),
+    hppSubtotal: Number(i.hppSubtotal ?? 0),
+    note: i.note ?? null,
+    order_batch_number: i.orderBatchNumber ?? 1,
+    orderBatchNumber: i.orderBatchNumber ?? 1,
+    kitchen_printed_at: i.kitchenPrintedAt?.toISOString?.() ?? null,
+    kitchenPrintedAt: i.kitchenPrintedAt?.toISOString?.() ?? null,
   };
 };
 

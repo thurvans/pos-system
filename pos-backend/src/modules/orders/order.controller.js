@@ -9,9 +9,27 @@ const {
   getHourlySalesService,
   getOrderCancellationLogsService,
 } = require('./order.service');
+const {
+  appendOrderItemsService,
+  markOrderItemsPrintedService,
+  splitOrderService,
+  mergeOrderService,
+} = require('./order.bill.service');
 const { serializeOrder } = require('../../utils/serializers');
 
 const idSchema = z.string().uuid('ID tidak valid');
+const requestOrderTypeSchema = z.enum(['DINE_IN', 'TAKE_AWAY', 'DELIVERY']);
+const orderItemInputSchema = z.object({
+  productId: idSchema,
+  variantId: idSchema.optional(),
+  quantity: z.number().int().positive('Quantity harus positif'),
+  discount: z.number().min(0).optional().default(0),
+  note: z.string().max(100, 'Catatan item maks 100 karakter').optional(),
+});
+const splitItemInputSchema = z.object({
+  orderItemId: idSchema,
+  quantity: z.number().int().positive('Quantity split harus positif'),
+});
 
 // ─── Create Order ─────────────────────────────────────────────
 const createOrder = async (req, res, next) => {
@@ -33,7 +51,7 @@ const createOrder = async (req, res, next) => {
       note:           z.string().max(500, 'Catatan order maks 500 karakter').optional(),
       queueNumber:    z.string().max(20).optional(),
       tableNumber:    z.string().max(20).optional(),
-      orderType:      z.enum(['DINE_IN', 'TAKE_AWAY', 'DELIVERY']).optional().default('DINE_IN'),
+      orderType:      requestOrderTypeSchema.optional().default('DINE_IN'),
     }).parse(req.body);
 
     const order = await createOrderService({
@@ -55,6 +73,86 @@ const createOrder = async (req, res, next) => {
 };
 
 // ─── Get Order ────────────────────────────────────────────────
+const appendOrderItems = async (req, res, next) => {
+  try {
+    const body = z.object({
+      items: z.array(orderItemInputSchema).min(1, 'Minimal 1 item'),
+    }).parse(req.body);
+
+    const order = await appendOrderItemsService({
+      orderId: req.params.id,
+      userId: req.user.id,
+      items: body.items,
+    });
+
+    res.json(serializeOrder(order));
+  } catch (err) {
+    next(err);
+  }
+};
+
+const markOrderItemsPrinted = async (req, res, next) => {
+  try {
+    const body = z.object({
+      itemIds: z.array(idSchema).min(1).optional(),
+    }).parse(req.body || {});
+
+    const order = await markOrderItemsPrintedService({
+      orderId: req.params.id,
+      userId: req.user.id,
+      itemIds: body.itemIds,
+    });
+
+    res.json(serializeOrder(order));
+  } catch (err) {
+    next(err);
+  }
+};
+
+const splitBill = async (req, res, next) => {
+  try {
+    const body = z.object({
+      targetTableNumber: z.string().max(20, 'Nama meja tujuan maksimal 20 karakter'),
+      items: z.array(splitItemInputSchema).min(1, 'Minimal 1 item'),
+    }).parse(req.body);
+
+    const result = await splitOrderService({
+      orderId: req.params.id,
+      userId: req.user.id,
+      targetTableNumber: body.targetTableNumber,
+      items: body.items,
+    });
+
+    res.json({
+      sourceOrder: serializeOrder(result.sourceOrder),
+      targetOrder: serializeOrder(result.targetOrder),
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+const mergeBill = async (req, res, next) => {
+  try {
+    const body = z.object({
+      targetTableNumber: z.string().max(20, 'Nama meja tujuan maksimal 20 karakter'),
+    }).parse(req.body);
+
+    const result = await mergeOrderService({
+      orderId: req.params.id,
+      userId: req.user.id,
+      targetTableNumber: body.targetTableNumber,
+    });
+
+    res.json({
+      sourceOrder: serializeOrder(result.sourceOrder),
+      targetOrder: serializeOrder(result.targetOrder),
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
 const getOrder = async (req, res, next) => {
   try {
     const order = await getOrderService(req.params.id);
@@ -163,6 +261,10 @@ const listOrderCancellationLogs = async (req, res, next) => {
 
 module.exports = {
   createOrder,
+  appendOrderItems,
+  markOrderItemsPrinted,
+  splitBill,
+  mergeBill,
   getOrder,
   cancelOrder,
   completeOrder,

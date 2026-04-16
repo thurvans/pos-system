@@ -11,9 +11,14 @@ const {
 
 const MAX_ITEMS = 50;
 const MAX_QTY_PER_ITEM = 999;
+const REQUEST_ORDER_TYPES = ['DINE_IN', 'TAKE_AWAY', 'DELIVERY'];
 const REVENUE_ORDER_STATUSES = ['PAID'];
 const PAID_LIKE_ORDER_STATUSES = new Set(['PAID', 'FULFILLED']);
+const ACTIVE_TABLE_BILL_STATUSES = ['DRAFT', 'PENDING_PAYMENT'];
 const roundMoney = (value) => Math.round((Number(value) + Number.EPSILON) * 100) / 100;
+const normalizeStoredOrderType = (orderType) => (
+  orderType === 'DELIVERY' ? 'TAKE_AWAY' : (orderType || 'DINE_IN')
+);
 
 const buildOrderItemKey = (productId, variantId) => `${productId}:${variantId || 'base'}`;
 const isReceiptConflictError = (err) => err?.code === 'P2002'
@@ -99,14 +104,70 @@ const createOrderService = async ({
     throw new AppError('Catatan order maksimal 500 karakter', 422);
   }
 
-  const validOrderTypes = ['DINE_IN', 'TAKE_AWAY', 'DELIVERY'];
-  if (orderType && !validOrderTypes.includes(orderType)) {
-    throw new AppError(`orderType tidak valid. Gunakan: ${validOrderTypes.join(', ')}`, 422);
+  if (orderType && !REQUEST_ORDER_TYPES.includes(orderType)) {
+    throw new AppError(`orderType tidak valid. Gunakan: ${REQUEST_ORDER_TYPES.join(', ')}`, 422);
   }
+
+  const normalizedOrderType = normalizeStoredOrderType(orderType);
 
   const branch = await prisma.branch.findUnique({ where: { id: branchId } });
   if (!branch) throw new AppError('Cabang tidak ditemukan', 404);
   if (!branch.isActive) throw new AppError('Cabang tidak aktif', 422);
+
+  const normalizedTableNumber = typeof tableNumber === 'string'
+    ? tableNumber.trim().slice(0, 20)
+    : '';
+  let resolvedTableNumber = normalizedTableNumber || null;
+  let resolvedTableId = null;
+
+  if (normalizedOrderType === 'DINE_IN' && resolvedTableNumber) {
+    const diningTable = await prisma.diningTable.findFirst({
+      where: {
+        branchId,
+        name: {
+          equals: resolvedTableNumber,
+          mode: 'insensitive',
+        },
+      },
+      select: {
+        id: true,
+        name: true,
+        isActive: true,
+        status: true,
+      },
+    });
+
+    if (diningTable) {
+      if (!diningTable.isActive || diningTable.status === 'OUT_OF_SERVICE') {
+        throw new AppError(`Meja "${diningTable.name}" sedang tidak aktif`, 422);
+      }
+      resolvedTableNumber = diningTable.name;
+      resolvedTableId = diningTable.id;
+    }
+
+    const activeBill = await prisma.order.findFirst({
+      where: {
+        branchId,
+        orderType: 'DINE_IN',
+        status: { in: ACTIVE_TABLE_BILL_STATUSES },
+        tableNumber: {
+          equals: resolvedTableNumber,
+          mode: 'insensitive',
+        },
+      },
+      select: {
+        id: true,
+        receiptNumber: true,
+      },
+    });
+
+    if (activeBill) {
+      throw new AppError(
+        `Meja ${resolvedTableNumber} masih memiliki bill aktif (${activeBill.receiptNumber}). Gunakan tambah pesanan pada bill tersebut.`,
+        409
+      );
+    }
+  }
 
   const businessProfile = await getEffectiveBusinessProfile(branchId);
 
@@ -247,6 +308,12 @@ const createOrderService = async ({
     db: prisma,
   });
 
+  const preparedOrderItems = orderItemsWithHpp.map((item) => ({
+    ...item,
+    orderBatchNumber: 1,
+    kitchenPrintedAt: null,
+  }));
+
   const orderDiscount = Math.round(Number(discountAmount) * 100) / 100;
   if (Number.isNaN(orderDiscount) || orderDiscount < 0) {
     throw new AppError('Diskon order tidak valid', 422);
@@ -284,12 +351,12 @@ const createOrderService = async ({
             hppAmount: totalHpp,
             totalAmount,
             note: note ? String(note).slice(0, 500) : null,
-            tableNumber: queueNumber,
-            tableId: null,
-            orderType: orderType || 'DINE_IN',
+            tableNumber: resolvedTableNumber || queueNumber,
+            tableId: resolvedTableId,
+            orderType: normalizedOrderType,
             status: 'DRAFT',
             items: {
-              create: orderItemsWithHpp,
+              create: preparedOrderItems,
             },
           },
           include: {
@@ -362,13 +429,14 @@ const listOrdersService = async ({
   const parsedPage = Math.max(1, parseInt(page, 10) || 1);
   const parsedLimit = Math.min(100, Math.max(1, parseInt(limit, 10) || 20));
   const normalizedStatus = status === 'FULFILLED' ? 'PAID' : status;
+  const normalizedOrderType = orderType ? normalizeStoredOrderType(orderType) : undefined;
 
   const createdAt = buildBusinessDateRange({ dateFrom, dateTo });
   const where = {
     ...(branchId && { branchId }),
     ...(normalizedStatus && { status: normalizedStatus }),
     ...(tableNumber && { tableNumber }),
-    ...(orderType && { orderType }),
+    ...(normalizedOrderType && { orderType: normalizedOrderType }),
     ...(cashierId && { cashierId }),
     ...(createdAt && { createdAt }),
   };

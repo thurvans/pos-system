@@ -6,9 +6,7 @@ const normalizeDir = (value) => {
   return resolved ? path.resolve(resolved) : null;
 };
 
-const dataRoot = normalizeDir(
-  process.env.APP_DATA_DIR || process.env.RAILWAY_VOLUME_MOUNT_PATH,
-) || process.cwd();
+const dataRoot = normalizeDir(process.env.APP_DATA_DIR) || process.cwd();
 
 const resolveDataPath = (...segments) => path.join(dataRoot, ...segments);
 

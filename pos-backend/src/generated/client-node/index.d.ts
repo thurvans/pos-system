@@ -260,6 +260,7 @@ export const FeaturePermission: {
   DASHBOARD_TOP_PRODUCTS: 'DASHBOARD_TOP_PRODUCTS',
   DASHBOARD_OCCUPANCY: 'DASHBOARD_OCCUPANCY',
   DASHBOARD_ACTIVE_ORDERS: 'DASHBOARD_ACTIVE_ORDERS',
+  TABLE_MANAGE: 'TABLE_MANAGE',
   MENU_CATEGORY_MANAGE: 'MENU_CATEGORY_MANAGE',
   MENU_ITEM_MANAGE: 'MENU_ITEM_MANAGE',
   MENU_VARIANT_MANAGE: 'MENU_VARIANT_MANAGE',
@@ -390,8 +391,7 @@ export type OrderFulfillmentStatus = (typeof OrderFulfillmentStatus)[keyof typeo
 
 export const OrderType: {
   DINE_IN: 'DINE_IN',
-  TAKE_AWAY: 'TAKE_AWAY',
-  DELIVERY: 'DELIVERY'
+  TAKE_AWAY: 'TAKE_AWAY'
 };
 
 export type OrderType = (typeof OrderType)[keyof typeof OrderType]
@@ -34336,24 +34336,13 @@ export namespace Prisma {
 
   export type AggregateDiningTable = {
     _count: DiningTableCountAggregateOutputType | null
-    _avg: DiningTableAvgAggregateOutputType | null
-    _sum: DiningTableSumAggregateOutputType | null
     _min: DiningTableMinAggregateOutputType | null
     _max: DiningTableMaxAggregateOutputType | null
-  }
-
-  export type DiningTableAvgAggregateOutputType = {
-    capacity: number | null
-  }
-
-  export type DiningTableSumAggregateOutputType = {
-    capacity: number | null
   }
 
   export type DiningTableMinAggregateOutputType = {
     id: string | null
     name: string | null
-    capacity: number | null
     status: $Enums.TableStatus | null
     isActive: boolean | null
     createdAt: Date | null
@@ -34364,7 +34353,6 @@ export namespace Prisma {
   export type DiningTableMaxAggregateOutputType = {
     id: string | null
     name: string | null
-    capacity: number | null
     status: $Enums.TableStatus | null
     isActive: boolean | null
     createdAt: Date | null
@@ -34375,7 +34363,6 @@ export namespace Prisma {
   export type DiningTableCountAggregateOutputType = {
     id: number
     name: number
-    capacity: number
     status: number
     isActive: number
     createdAt: number
@@ -34385,18 +34372,9 @@ export namespace Prisma {
   }
 
 
-  export type DiningTableAvgAggregateInputType = {
-    capacity?: true
-  }
-
-  export type DiningTableSumAggregateInputType = {
-    capacity?: true
-  }
-
   export type DiningTableMinAggregateInputType = {
     id?: true
     name?: true
-    capacity?: true
     status?: true
     isActive?: true
     createdAt?: true
@@ -34407,7 +34385,6 @@ export namespace Prisma {
   export type DiningTableMaxAggregateInputType = {
     id?: true
     name?: true
-    capacity?: true
     status?: true
     isActive?: true
     createdAt?: true
@@ -34418,7 +34395,6 @@ export namespace Prisma {
   export type DiningTableCountAggregateInputType = {
     id?: true
     name?: true
-    capacity?: true
     status?: true
     isActive?: true
     createdAt?: true
@@ -34465,18 +34441,6 @@ export namespace Prisma {
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
-     * Select which fields to average
-    **/
-    _avg?: DiningTableAvgAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to sum
-    **/
-    _sum?: DiningTableSumAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
      * Select which fields to find the minimum value
     **/
     _min?: DiningTableMinAggregateInputType
@@ -34507,8 +34471,6 @@ export namespace Prisma {
     take?: number
     skip?: number
     _count?: DiningTableCountAggregateInputType | true
-    _avg?: DiningTableAvgAggregateInputType
-    _sum?: DiningTableSumAggregateInputType
     _min?: DiningTableMinAggregateInputType
     _max?: DiningTableMaxAggregateInputType
   }
@@ -34516,15 +34478,12 @@ export namespace Prisma {
   export type DiningTableGroupByOutputType = {
     id: string
     name: string
-    capacity: number
     status: $Enums.TableStatus
     isActive: boolean
     createdAt: Date
     updatedAt: Date
     branchId: string
     _count: DiningTableCountAggregateOutputType | null
-    _avg: DiningTableAvgAggregateOutputType | null
-    _sum: DiningTableSumAggregateOutputType | null
     _min: DiningTableMinAggregateOutputType | null
     _max: DiningTableMaxAggregateOutputType | null
   }
@@ -34546,7 +34505,6 @@ export namespace Prisma {
   export type DiningTableSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     name?: boolean
-    capacity?: boolean
     status?: boolean
     isActive?: boolean
     createdAt?: boolean
@@ -34560,7 +34518,6 @@ export namespace Prisma {
   export type DiningTableSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     name?: boolean
-    capacity?: boolean
     status?: boolean
     isActive?: boolean
     createdAt?: boolean
@@ -34572,7 +34529,6 @@ export namespace Prisma {
   export type DiningTableSelectScalar = {
     id?: boolean
     name?: boolean
-    capacity?: boolean
     status?: boolean
     isActive?: boolean
     createdAt?: boolean
@@ -34598,7 +34554,6 @@ export namespace Prisma {
     scalars: $Extensions.GetPayloadResult<{
       id: string
       name: string
-      capacity: number
       status: $Enums.TableStatus
       isActive: boolean
       createdAt: Date
@@ -35001,7 +34956,6 @@ export namespace Prisma {
   interface DiningTableFieldRefs {
     readonly id: FieldRef<"DiningTable", 'String'>
     readonly name: FieldRef<"DiningTable", 'String'>
-    readonly capacity: FieldRef<"DiningTable", 'Int'>
     readonly status: FieldRef<"DiningTable", 'TableStatus'>
     readonly isActive: FieldRef<"DiningTable", 'Boolean'>
     readonly createdAt: FieldRef<"DiningTable", 'DateTime'>
@@ -36771,6 +36725,7 @@ export namespace Prisma {
     discount: Decimal | null
     subtotal: Decimal | null
     hppSubtotal: Decimal | null
+    orderBatchNumber: number | null
   }
 
   export type OrderItemSumAggregateOutputType = {
@@ -36779,6 +36734,7 @@ export namespace Prisma {
     discount: Decimal | null
     subtotal: Decimal | null
     hppSubtotal: Decimal | null
+    orderBatchNumber: number | null
   }
 
   export type OrderItemMinAggregateOutputType = {
@@ -36788,6 +36744,8 @@ export namespace Prisma {
     discount: Decimal | null
     subtotal: Decimal | null
     hppSubtotal: Decimal | null
+    orderBatchNumber: number | null
+    kitchenPrintedAt: Date | null
     note: string | null
     orderId: string | null
     productId: string | null
@@ -36801,6 +36759,8 @@ export namespace Prisma {
     discount: Decimal | null
     subtotal: Decimal | null
     hppSubtotal: Decimal | null
+    orderBatchNumber: number | null
+    kitchenPrintedAt: Date | null
     note: string | null
     orderId: string | null
     productId: string | null
@@ -36814,6 +36774,8 @@ export namespace Prisma {
     discount: number
     subtotal: number
     hppSubtotal: number
+    orderBatchNumber: number
+    kitchenPrintedAt: number
     modifierSnapshot: number
     note: number
     orderId: number
@@ -36829,6 +36791,7 @@ export namespace Prisma {
     discount?: true
     subtotal?: true
     hppSubtotal?: true
+    orderBatchNumber?: true
   }
 
   export type OrderItemSumAggregateInputType = {
@@ -36837,6 +36800,7 @@ export namespace Prisma {
     discount?: true
     subtotal?: true
     hppSubtotal?: true
+    orderBatchNumber?: true
   }
 
   export type OrderItemMinAggregateInputType = {
@@ -36846,6 +36810,8 @@ export namespace Prisma {
     discount?: true
     subtotal?: true
     hppSubtotal?: true
+    orderBatchNumber?: true
+    kitchenPrintedAt?: true
     note?: true
     orderId?: true
     productId?: true
@@ -36859,6 +36825,8 @@ export namespace Prisma {
     discount?: true
     subtotal?: true
     hppSubtotal?: true
+    orderBatchNumber?: true
+    kitchenPrintedAt?: true
     note?: true
     orderId?: true
     productId?: true
@@ -36872,6 +36840,8 @@ export namespace Prisma {
     discount?: true
     subtotal?: true
     hppSubtotal?: true
+    orderBatchNumber?: true
+    kitchenPrintedAt?: true
     modifierSnapshot?: true
     note?: true
     orderId?: true
@@ -36973,6 +36943,8 @@ export namespace Prisma {
     discount: Decimal
     subtotal: Decimal
     hppSubtotal: Decimal
+    orderBatchNumber: number
+    kitchenPrintedAt: Date | null
     modifierSnapshot: JsonValue | null
     note: string | null
     orderId: string
@@ -37006,6 +36978,8 @@ export namespace Prisma {
     discount?: boolean
     subtotal?: boolean
     hppSubtotal?: boolean
+    orderBatchNumber?: boolean
+    kitchenPrintedAt?: boolean
     modifierSnapshot?: boolean
     note?: boolean
     orderId?: boolean
@@ -37023,6 +36997,8 @@ export namespace Prisma {
     discount?: boolean
     subtotal?: boolean
     hppSubtotal?: boolean
+    orderBatchNumber?: boolean
+    kitchenPrintedAt?: boolean
     modifierSnapshot?: boolean
     note?: boolean
     orderId?: boolean
@@ -37040,6 +37016,8 @@ export namespace Prisma {
     discount?: boolean
     subtotal?: boolean
     hppSubtotal?: boolean
+    orderBatchNumber?: boolean
+    kitchenPrintedAt?: boolean
     modifierSnapshot?: boolean
     note?: boolean
     orderId?: boolean
@@ -37072,6 +37050,8 @@ export namespace Prisma {
       discount: Prisma.Decimal
       subtotal: Prisma.Decimal
       hppSubtotal: Prisma.Decimal
+      orderBatchNumber: number
+      kitchenPrintedAt: Date | null
       modifierSnapshot: Prisma.JsonValue | null
       note: string | null
       orderId: string
@@ -37479,6 +37459,8 @@ export namespace Prisma {
     readonly discount: FieldRef<"OrderItem", 'Decimal'>
     readonly subtotal: FieldRef<"OrderItem", 'Decimal'>
     readonly hppSubtotal: FieldRef<"OrderItem", 'Decimal'>
+    readonly orderBatchNumber: FieldRef<"OrderItem", 'Int'>
+    readonly kitchenPrintedAt: FieldRef<"OrderItem", 'DateTime'>
     readonly modifierSnapshot: FieldRef<"OrderItem", 'Json'>
     readonly note: FieldRef<"OrderItem", 'String'>
     readonly orderId: FieldRef<"OrderItem", 'String'>
@@ -53383,7 +53365,6 @@ export namespace Prisma {
   export const DiningTableScalarFieldEnum: {
     id: 'id',
     name: 'name',
-    capacity: 'capacity',
     status: 'status',
     isActive: 'isActive',
     createdAt: 'createdAt',
@@ -53430,6 +53411,8 @@ export namespace Prisma {
     discount: 'discount',
     subtotal: 'subtotal',
     hppSubtotal: 'hppSubtotal',
+    orderBatchNumber: 'orderBatchNumber',
+    kitchenPrintedAt: 'kitchenPrintedAt',
     modifierSnapshot: 'modifierSnapshot',
     note: 'note',
     orderId: 'orderId',
@@ -56219,7 +56202,6 @@ export namespace Prisma {
     NOT?: DiningTableWhereInput | DiningTableWhereInput[]
     id?: StringFilter<"DiningTable"> | string
     name?: StringFilter<"DiningTable"> | string
-    capacity?: IntFilter<"DiningTable"> | number
     status?: EnumTableStatusFilter<"DiningTable"> | $Enums.TableStatus
     isActive?: BoolFilter<"DiningTable"> | boolean
     createdAt?: DateTimeFilter<"DiningTable"> | Date | string
@@ -56232,7 +56214,6 @@ export namespace Prisma {
   export type DiningTableOrderByWithRelationInput = {
     id?: SortOrder
     name?: SortOrder
-    capacity?: SortOrder
     status?: SortOrder
     isActive?: SortOrder
     createdAt?: SortOrder
@@ -56249,7 +56230,6 @@ export namespace Prisma {
     OR?: DiningTableWhereInput[]
     NOT?: DiningTableWhereInput | DiningTableWhereInput[]
     name?: StringFilter<"DiningTable"> | string
-    capacity?: IntFilter<"DiningTable"> | number
     status?: EnumTableStatusFilter<"DiningTable"> | $Enums.TableStatus
     isActive?: BoolFilter<"DiningTable"> | boolean
     createdAt?: DateTimeFilter<"DiningTable"> | Date | string
@@ -56262,17 +56242,14 @@ export namespace Prisma {
   export type DiningTableOrderByWithAggregationInput = {
     id?: SortOrder
     name?: SortOrder
-    capacity?: SortOrder
     status?: SortOrder
     isActive?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     branchId?: SortOrder
     _count?: DiningTableCountOrderByAggregateInput
-    _avg?: DiningTableAvgOrderByAggregateInput
     _max?: DiningTableMaxOrderByAggregateInput
     _min?: DiningTableMinOrderByAggregateInput
-    _sum?: DiningTableSumOrderByAggregateInput
   }
 
   export type DiningTableScalarWhereWithAggregatesInput = {
@@ -56281,7 +56258,6 @@ export namespace Prisma {
     NOT?: DiningTableScalarWhereWithAggregatesInput | DiningTableScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"DiningTable"> | string
     name?: StringWithAggregatesFilter<"DiningTable"> | string
-    capacity?: IntWithAggregatesFilter<"DiningTable"> | number
     status?: EnumTableStatusWithAggregatesFilter<"DiningTable"> | $Enums.TableStatus
     isActive?: BoolWithAggregatesFilter<"DiningTable"> | boolean
     createdAt?: DateTimeWithAggregatesFilter<"DiningTable"> | Date | string
@@ -56473,6 +56449,8 @@ export namespace Prisma {
     discount?: DecimalFilter<"OrderItem"> | Decimal | DecimalJsLike | number | string
     subtotal?: DecimalFilter<"OrderItem"> | Decimal | DecimalJsLike | number | string
     hppSubtotal?: DecimalFilter<"OrderItem"> | Decimal | DecimalJsLike | number | string
+    orderBatchNumber?: IntFilter<"OrderItem"> | number
+    kitchenPrintedAt?: DateTimeNullableFilter<"OrderItem"> | Date | string | null
     modifierSnapshot?: JsonNullableFilter<"OrderItem">
     note?: StringNullableFilter<"OrderItem"> | string | null
     orderId?: StringFilter<"OrderItem"> | string
@@ -56490,6 +56468,8 @@ export namespace Prisma {
     discount?: SortOrder
     subtotal?: SortOrder
     hppSubtotal?: SortOrder
+    orderBatchNumber?: SortOrder
+    kitchenPrintedAt?: SortOrderInput | SortOrder
     modifierSnapshot?: SortOrderInput | SortOrder
     note?: SortOrderInput | SortOrder
     orderId?: SortOrder
@@ -56510,6 +56490,8 @@ export namespace Prisma {
     discount?: DecimalFilter<"OrderItem"> | Decimal | DecimalJsLike | number | string
     subtotal?: DecimalFilter<"OrderItem"> | Decimal | DecimalJsLike | number | string
     hppSubtotal?: DecimalFilter<"OrderItem"> | Decimal | DecimalJsLike | number | string
+    orderBatchNumber?: IntFilter<"OrderItem"> | number
+    kitchenPrintedAt?: DateTimeNullableFilter<"OrderItem"> | Date | string | null
     modifierSnapshot?: JsonNullableFilter<"OrderItem">
     note?: StringNullableFilter<"OrderItem"> | string | null
     orderId?: StringFilter<"OrderItem"> | string
@@ -56527,6 +56509,8 @@ export namespace Prisma {
     discount?: SortOrder
     subtotal?: SortOrder
     hppSubtotal?: SortOrder
+    orderBatchNumber?: SortOrder
+    kitchenPrintedAt?: SortOrderInput | SortOrder
     modifierSnapshot?: SortOrderInput | SortOrder
     note?: SortOrderInput | SortOrder
     orderId?: SortOrder
@@ -56549,6 +56533,8 @@ export namespace Prisma {
     discount?: DecimalWithAggregatesFilter<"OrderItem"> | Decimal | DecimalJsLike | number | string
     subtotal?: DecimalWithAggregatesFilter<"OrderItem"> | Decimal | DecimalJsLike | number | string
     hppSubtotal?: DecimalWithAggregatesFilter<"OrderItem"> | Decimal | DecimalJsLike | number | string
+    orderBatchNumber?: IntWithAggregatesFilter<"OrderItem"> | number
+    kitchenPrintedAt?: DateTimeNullableWithAggregatesFilter<"OrderItem"> | Date | string | null
     modifierSnapshot?: JsonNullableWithAggregatesFilter<"OrderItem">
     note?: StringNullableWithAggregatesFilter<"OrderItem"> | string | null
     orderId?: StringWithAggregatesFilter<"OrderItem"> | string
@@ -59943,7 +59929,6 @@ export namespace Prisma {
   export type DiningTableCreateInput = {
     id?: string
     name: string
-    capacity?: number
     status?: $Enums.TableStatus
     isActive?: boolean
     createdAt?: Date | string
@@ -59955,7 +59940,6 @@ export namespace Prisma {
   export type DiningTableUncheckedCreateInput = {
     id?: string
     name: string
-    capacity?: number
     status?: $Enums.TableStatus
     isActive?: boolean
     createdAt?: Date | string
@@ -59967,7 +59951,6 @@ export namespace Prisma {
   export type DiningTableUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    capacity?: IntFieldUpdateOperationsInput | number
     status?: EnumTableStatusFieldUpdateOperationsInput | $Enums.TableStatus
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -59979,7 +59962,6 @@ export namespace Prisma {
   export type DiningTableUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    capacity?: IntFieldUpdateOperationsInput | number
     status?: EnumTableStatusFieldUpdateOperationsInput | $Enums.TableStatus
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -59991,7 +59973,6 @@ export namespace Prisma {
   export type DiningTableCreateManyInput = {
     id?: string
     name: string
-    capacity?: number
     status?: $Enums.TableStatus
     isActive?: boolean
     createdAt?: Date | string
@@ -60002,7 +59983,6 @@ export namespace Prisma {
   export type DiningTableUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    capacity?: IntFieldUpdateOperationsInput | number
     status?: EnumTableStatusFieldUpdateOperationsInput | $Enums.TableStatus
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -60012,7 +59992,6 @@ export namespace Prisma {
   export type DiningTableUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    capacity?: IntFieldUpdateOperationsInput | number
     status?: EnumTableStatusFieldUpdateOperationsInput | $Enums.TableStatus
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -60224,6 +60203,8 @@ export namespace Prisma {
     discount?: Decimal | DecimalJsLike | number | string
     subtotal: Decimal | DecimalJsLike | number | string
     hppSubtotal?: Decimal | DecimalJsLike | number | string
+    orderBatchNumber?: number
+    kitchenPrintedAt?: Date | string | null
     modifierSnapshot?: NullableJsonNullValueInput | InputJsonValue
     note?: string | null
     order: OrderCreateNestedOneWithoutItemsInput
@@ -60238,6 +60219,8 @@ export namespace Prisma {
     discount?: Decimal | DecimalJsLike | number | string
     subtotal: Decimal | DecimalJsLike | number | string
     hppSubtotal?: Decimal | DecimalJsLike | number | string
+    orderBatchNumber?: number
+    kitchenPrintedAt?: Date | string | null
     modifierSnapshot?: NullableJsonNullValueInput | InputJsonValue
     note?: string | null
     orderId: string
@@ -60252,6 +60235,8 @@ export namespace Prisma {
     discount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     subtotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     hppSubtotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    orderBatchNumber?: IntFieldUpdateOperationsInput | number
+    kitchenPrintedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     modifierSnapshot?: NullableJsonNullValueInput | InputJsonValue
     note?: NullableStringFieldUpdateOperationsInput | string | null
     order?: OrderUpdateOneRequiredWithoutItemsNestedInput
@@ -60266,6 +60251,8 @@ export namespace Prisma {
     discount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     subtotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     hppSubtotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    orderBatchNumber?: IntFieldUpdateOperationsInput | number
+    kitchenPrintedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     modifierSnapshot?: NullableJsonNullValueInput | InputJsonValue
     note?: NullableStringFieldUpdateOperationsInput | string | null
     orderId?: StringFieldUpdateOperationsInput | string
@@ -60280,6 +60267,8 @@ export namespace Prisma {
     discount?: Decimal | DecimalJsLike | number | string
     subtotal: Decimal | DecimalJsLike | number | string
     hppSubtotal?: Decimal | DecimalJsLike | number | string
+    orderBatchNumber?: number
+    kitchenPrintedAt?: Date | string | null
     modifierSnapshot?: NullableJsonNullValueInput | InputJsonValue
     note?: string | null
     orderId: string
@@ -60294,6 +60283,8 @@ export namespace Prisma {
     discount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     subtotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     hppSubtotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    orderBatchNumber?: IntFieldUpdateOperationsInput | number
+    kitchenPrintedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     modifierSnapshot?: NullableJsonNullValueInput | InputJsonValue
     note?: NullableStringFieldUpdateOperationsInput | string | null
   }
@@ -60305,6 +60296,8 @@ export namespace Prisma {
     discount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     subtotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     hppSubtotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    orderBatchNumber?: IntFieldUpdateOperationsInput | number
+    kitchenPrintedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     modifierSnapshot?: NullableJsonNullValueInput | InputJsonValue
     note?: NullableStringFieldUpdateOperationsInput | string | null
     orderId?: StringFieldUpdateOperationsInput | string
@@ -63418,7 +63411,6 @@ export namespace Prisma {
   export type DiningTableCountOrderByAggregateInput = {
     id?: SortOrder
     name?: SortOrder
-    capacity?: SortOrder
     status?: SortOrder
     isActive?: SortOrder
     createdAt?: SortOrder
@@ -63426,14 +63418,9 @@ export namespace Prisma {
     branchId?: SortOrder
   }
 
-  export type DiningTableAvgOrderByAggregateInput = {
-    capacity?: SortOrder
-  }
-
   export type DiningTableMaxOrderByAggregateInput = {
     id?: SortOrder
     name?: SortOrder
-    capacity?: SortOrder
     status?: SortOrder
     isActive?: SortOrder
     createdAt?: SortOrder
@@ -63444,16 +63431,11 @@ export namespace Prisma {
   export type DiningTableMinOrderByAggregateInput = {
     id?: SortOrder
     name?: SortOrder
-    capacity?: SortOrder
     status?: SortOrder
     isActive?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     branchId?: SortOrder
-  }
-
-  export type DiningTableSumOrderByAggregateInput = {
-    capacity?: SortOrder
   }
 
   export type EnumTableStatusWithAggregatesFilter<$PrismaModel = never> = {
@@ -63677,6 +63659,8 @@ export namespace Prisma {
     discount?: SortOrder
     subtotal?: SortOrder
     hppSubtotal?: SortOrder
+    orderBatchNumber?: SortOrder
+    kitchenPrintedAt?: SortOrder
     modifierSnapshot?: SortOrder
     note?: SortOrder
     orderId?: SortOrder
@@ -63690,6 +63674,7 @@ export namespace Prisma {
     discount?: SortOrder
     subtotal?: SortOrder
     hppSubtotal?: SortOrder
+    orderBatchNumber?: SortOrder
   }
 
   export type OrderItemMaxOrderByAggregateInput = {
@@ -63699,6 +63684,8 @@ export namespace Prisma {
     discount?: SortOrder
     subtotal?: SortOrder
     hppSubtotal?: SortOrder
+    orderBatchNumber?: SortOrder
+    kitchenPrintedAt?: SortOrder
     note?: SortOrder
     orderId?: SortOrder
     productId?: SortOrder
@@ -63712,6 +63699,8 @@ export namespace Prisma {
     discount?: SortOrder
     subtotal?: SortOrder
     hppSubtotal?: SortOrder
+    orderBatchNumber?: SortOrder
+    kitchenPrintedAt?: SortOrder
     note?: SortOrder
     orderId?: SortOrder
     productId?: SortOrder
@@ -63724,6 +63713,7 @@ export namespace Prisma {
     discount?: SortOrder
     subtotal?: SortOrder
     hppSubtotal?: SortOrder
+    orderBatchNumber?: SortOrder
   }
   export type JsonNullableWithAggregatesFilter<$PrismaModel = never> = 
     | PatchUndefined<
@@ -70692,7 +70682,6 @@ export namespace Prisma {
   export type DiningTableCreateWithoutBranchInput = {
     id?: string
     name: string
-    capacity?: number
     status?: $Enums.TableStatus
     isActive?: boolean
     createdAt?: Date | string
@@ -70703,7 +70692,6 @@ export namespace Prisma {
   export type DiningTableUncheckedCreateWithoutBranchInput = {
     id?: string
     name: string
-    capacity?: number
     status?: $Enums.TableStatus
     isActive?: boolean
     createdAt?: Date | string
@@ -71295,7 +71283,6 @@ export namespace Prisma {
     NOT?: DiningTableScalarWhereInput | DiningTableScalarWhereInput[]
     id?: StringFilter<"DiningTable"> | string
     name?: StringFilter<"DiningTable"> | string
-    capacity?: IntFilter<"DiningTable"> | number
     status?: EnumTableStatusFilter<"DiningTable"> | $Enums.TableStatus
     isActive?: BoolFilter<"DiningTable"> | boolean
     createdAt?: DateTimeFilter<"DiningTable"> | Date | string
@@ -71820,6 +71807,8 @@ export namespace Prisma {
     discount?: Decimal | DecimalJsLike | number | string
     subtotal: Decimal | DecimalJsLike | number | string
     hppSubtotal?: Decimal | DecimalJsLike | number | string
+    orderBatchNumber?: number
+    kitchenPrintedAt?: Date | string | null
     modifierSnapshot?: NullableJsonNullValueInput | InputJsonValue
     note?: string | null
     order: OrderCreateNestedOneWithoutItemsInput
@@ -71833,6 +71822,8 @@ export namespace Prisma {
     discount?: Decimal | DecimalJsLike | number | string
     subtotal: Decimal | DecimalJsLike | number | string
     hppSubtotal?: Decimal | DecimalJsLike | number | string
+    orderBatchNumber?: number
+    kitchenPrintedAt?: Date | string | null
     modifierSnapshot?: NullableJsonNullValueInput | InputJsonValue
     note?: string | null
     orderId: string
@@ -72119,6 +72110,8 @@ export namespace Prisma {
     discount?: DecimalFilter<"OrderItem"> | Decimal | DecimalJsLike | number | string
     subtotal?: DecimalFilter<"OrderItem"> | Decimal | DecimalJsLike | number | string
     hppSubtotal?: DecimalFilter<"OrderItem"> | Decimal | DecimalJsLike | number | string
+    orderBatchNumber?: IntFilter<"OrderItem"> | number
+    kitchenPrintedAt?: DateTimeNullableFilter<"OrderItem"> | Date | string | null
     modifierSnapshot?: JsonNullableFilter<"OrderItem">
     note?: StringNullableFilter<"OrderItem"> | string | null
     orderId?: StringFilter<"OrderItem"> | string
@@ -72571,6 +72564,8 @@ export namespace Prisma {
     discount?: Decimal | DecimalJsLike | number | string
     subtotal: Decimal | DecimalJsLike | number | string
     hppSubtotal?: Decimal | DecimalJsLike | number | string
+    orderBatchNumber?: number
+    kitchenPrintedAt?: Date | string | null
     modifierSnapshot?: NullableJsonNullValueInput | InputJsonValue
     note?: string | null
     order: OrderCreateNestedOneWithoutItemsInput
@@ -72584,6 +72579,8 @@ export namespace Prisma {
     discount?: Decimal | DecimalJsLike | number | string
     subtotal: Decimal | DecimalJsLike | number | string
     hppSubtotal?: Decimal | DecimalJsLike | number | string
+    orderBatchNumber?: number
+    kitchenPrintedAt?: Date | string | null
     modifierSnapshot?: NullableJsonNullValueInput | InputJsonValue
     note?: string | null
     orderId: string
@@ -77420,7 +77417,6 @@ export namespace Prisma {
   export type DiningTableCreateWithoutOrdersInput = {
     id?: string
     name: string
-    capacity?: number
     status?: $Enums.TableStatus
     isActive?: boolean
     createdAt?: Date | string
@@ -77431,7 +77427,6 @@ export namespace Prisma {
   export type DiningTableUncheckedCreateWithoutOrdersInput = {
     id?: string
     name: string
-    capacity?: number
     status?: $Enums.TableStatus
     isActive?: boolean
     createdAt?: Date | string
@@ -77502,6 +77497,8 @@ export namespace Prisma {
     discount?: Decimal | DecimalJsLike | number | string
     subtotal: Decimal | DecimalJsLike | number | string
     hppSubtotal?: Decimal | DecimalJsLike | number | string
+    orderBatchNumber?: number
+    kitchenPrintedAt?: Date | string | null
     modifierSnapshot?: NullableJsonNullValueInput | InputJsonValue
     note?: string | null
     product: ProductCreateNestedOneWithoutOrderItemsInput
@@ -77515,6 +77512,8 @@ export namespace Prisma {
     discount?: Decimal | DecimalJsLike | number | string
     subtotal: Decimal | DecimalJsLike | number | string
     hppSubtotal?: Decimal | DecimalJsLike | number | string
+    orderBatchNumber?: number
+    kitchenPrintedAt?: Date | string | null
     modifierSnapshot?: NullableJsonNullValueInput | InputJsonValue
     note?: string | null
     productId: string
@@ -77844,7 +77843,6 @@ export namespace Prisma {
   export type DiningTableUpdateWithoutOrdersInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    capacity?: IntFieldUpdateOperationsInput | number
     status?: EnumTableStatusFieldUpdateOperationsInput | $Enums.TableStatus
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -77855,7 +77853,6 @@ export namespace Prisma {
   export type DiningTableUncheckedUpdateWithoutOrdersInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    capacity?: IntFieldUpdateOperationsInput | number
     status?: EnumTableStatusFieldUpdateOperationsInput | $Enums.TableStatus
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -81615,7 +81612,6 @@ export namespace Prisma {
   export type DiningTableCreateManyBranchInput = {
     id?: string
     name: string
-    capacity?: number
     status?: $Enums.TableStatus
     isActive?: boolean
     createdAt?: Date | string
@@ -82029,7 +82025,6 @@ export namespace Prisma {
   export type DiningTableUpdateWithoutBranchInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    capacity?: IntFieldUpdateOperationsInput | number
     status?: EnumTableStatusFieldUpdateOperationsInput | $Enums.TableStatus
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -82040,7 +82035,6 @@ export namespace Prisma {
   export type DiningTableUncheckedUpdateWithoutBranchInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    capacity?: IntFieldUpdateOperationsInput | number
     status?: EnumTableStatusFieldUpdateOperationsInput | $Enums.TableStatus
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -82051,7 +82045,6 @@ export namespace Prisma {
   export type DiningTableUncheckedUpdateManyWithoutBranchInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    capacity?: IntFieldUpdateOperationsInput | number
     status?: EnumTableStatusFieldUpdateOperationsInput | $Enums.TableStatus
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -82564,6 +82557,8 @@ export namespace Prisma {
     discount?: Decimal | DecimalJsLike | number | string
     subtotal: Decimal | DecimalJsLike | number | string
     hppSubtotal?: Decimal | DecimalJsLike | number | string
+    orderBatchNumber?: number
+    kitchenPrintedAt?: Date | string | null
     modifierSnapshot?: NullableJsonNullValueInput | InputJsonValue
     note?: string | null
     orderId: string
@@ -82696,6 +82691,8 @@ export namespace Prisma {
     discount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     subtotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     hppSubtotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    orderBatchNumber?: IntFieldUpdateOperationsInput | number
+    kitchenPrintedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     modifierSnapshot?: NullableJsonNullValueInput | InputJsonValue
     note?: NullableStringFieldUpdateOperationsInput | string | null
     order?: OrderUpdateOneRequiredWithoutItemsNestedInput
@@ -82709,6 +82706,8 @@ export namespace Prisma {
     discount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     subtotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     hppSubtotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    orderBatchNumber?: IntFieldUpdateOperationsInput | number
+    kitchenPrintedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     modifierSnapshot?: NullableJsonNullValueInput | InputJsonValue
     note?: NullableStringFieldUpdateOperationsInput | string | null
     orderId?: StringFieldUpdateOperationsInput | string
@@ -82722,6 +82721,8 @@ export namespace Prisma {
     discount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     subtotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     hppSubtotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    orderBatchNumber?: IntFieldUpdateOperationsInput | number
+    kitchenPrintedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     modifierSnapshot?: NullableJsonNullValueInput | InputJsonValue
     note?: NullableStringFieldUpdateOperationsInput | string | null
     orderId?: StringFieldUpdateOperationsInput | string
@@ -82905,6 +82906,8 @@ export namespace Prisma {
     discount?: Decimal | DecimalJsLike | number | string
     subtotal: Decimal | DecimalJsLike | number | string
     hppSubtotal?: Decimal | DecimalJsLike | number | string
+    orderBatchNumber?: number
+    kitchenPrintedAt?: Date | string | null
     modifierSnapshot?: NullableJsonNullValueInput | InputJsonValue
     note?: string | null
     orderId: string
@@ -82959,6 +82962,8 @@ export namespace Prisma {
     discount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     subtotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     hppSubtotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    orderBatchNumber?: IntFieldUpdateOperationsInput | number
+    kitchenPrintedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     modifierSnapshot?: NullableJsonNullValueInput | InputJsonValue
     note?: NullableStringFieldUpdateOperationsInput | string | null
     order?: OrderUpdateOneRequiredWithoutItemsNestedInput
@@ -82972,6 +82977,8 @@ export namespace Prisma {
     discount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     subtotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     hppSubtotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    orderBatchNumber?: IntFieldUpdateOperationsInput | number
+    kitchenPrintedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     modifierSnapshot?: NullableJsonNullValueInput | InputJsonValue
     note?: NullableStringFieldUpdateOperationsInput | string | null
     orderId?: StringFieldUpdateOperationsInput | string
@@ -82985,6 +82992,8 @@ export namespace Prisma {
     discount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     subtotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     hppSubtotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    orderBatchNumber?: IntFieldUpdateOperationsInput | number
+    kitchenPrintedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     modifierSnapshot?: NullableJsonNullValueInput | InputJsonValue
     note?: NullableStringFieldUpdateOperationsInput | string | null
     orderId?: StringFieldUpdateOperationsInput | string
@@ -83809,6 +83818,8 @@ export namespace Prisma {
     discount?: Decimal | DecimalJsLike | number | string
     subtotal: Decimal | DecimalJsLike | number | string
     hppSubtotal?: Decimal | DecimalJsLike | number | string
+    orderBatchNumber?: number
+    kitchenPrintedAt?: Date | string | null
     modifierSnapshot?: NullableJsonNullValueInput | InputJsonValue
     note?: string | null
     productId: string
@@ -83869,6 +83880,8 @@ export namespace Prisma {
     discount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     subtotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     hppSubtotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    orderBatchNumber?: IntFieldUpdateOperationsInput | number
+    kitchenPrintedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     modifierSnapshot?: NullableJsonNullValueInput | InputJsonValue
     note?: NullableStringFieldUpdateOperationsInput | string | null
     product?: ProductUpdateOneRequiredWithoutOrderItemsNestedInput
@@ -83882,6 +83895,8 @@ export namespace Prisma {
     discount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     subtotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     hppSubtotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    orderBatchNumber?: IntFieldUpdateOperationsInput | number
+    kitchenPrintedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     modifierSnapshot?: NullableJsonNullValueInput | InputJsonValue
     note?: NullableStringFieldUpdateOperationsInput | string | null
     productId?: StringFieldUpdateOperationsInput | string
@@ -83895,6 +83910,8 @@ export namespace Prisma {
     discount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     subtotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     hppSubtotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    orderBatchNumber?: IntFieldUpdateOperationsInput | number
+    kitchenPrintedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     modifierSnapshot?: NullableJsonNullValueInput | InputJsonValue
     note?: NullableStringFieldUpdateOperationsInput | string | null
     productId?: StringFieldUpdateOperationsInput | string

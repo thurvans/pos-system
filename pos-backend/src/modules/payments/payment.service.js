@@ -337,6 +337,21 @@ const mergePaymentMeta = (payment, event) => ({
   ...(event.transactionId ? { transactionId: event.transactionId } : {}),
 });
 
+const restoreOrderToDraftIfPending = async (tx, orderId) => {
+  const order = await tx.order.findUnique({
+    where: { id: orderId },
+    select: { id: true, status: true },
+  });
+
+  if (!order) return;
+  if (order.status !== 'PENDING_PAYMENT') return;
+
+  await tx.order.update({
+    where: { id: orderId },
+    data: { status: 'DRAFT' },
+  });
+};
+
 const handlePaymentSuccess = async (payment, event) => {
   await prisma.$transaction(async (tx) => {
     await tx.payment.update({
@@ -371,13 +386,19 @@ const handlePaymentSuccess = async (payment, event) => {
 };
 
 const handlePaymentFailed = async (payment) => {
-  await prisma.payment.update({ where: { id: payment.id }, data: { status: 'FAILED' } });
+  await prisma.$transaction(async (tx) => {
+    await tx.payment.update({
+      where: { id: payment.id },
+      data: { status: 'FAILED' },
+    });
+    await restoreOrderToDraftIfPending(tx, payment.orderId);
+  });
 };
 
 const handlePaymentExpired = async (payment) => {
   await prisma.$transaction(async (tx) => {
     await tx.payment.update({ where: { id: payment.id }, data: { status: 'EXPIRED' } });
-    await tx.order.update({ where: { id: payment.orderId }, data: { status: 'CANCELLED' } });
+    await restoreOrderToDraftIfPending(tx, payment.orderId);
   });
 };
 

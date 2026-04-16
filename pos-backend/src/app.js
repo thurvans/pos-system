@@ -26,6 +26,7 @@ const settingsRoutes = require('./modules/settings/settings.routes');
 const auditRoutes = require('./modules/audit/audit.routes');
 const shiftScheduleRoutes = require('./modules/shifts/schedule.routes');
 const costingRoutes = require('./modules/costing/costing.routes');
+const tableRoutes = require('./modules/tables/table.routes');
 
 const app = express();
 app.set('trust proxy', 1);
@@ -109,6 +110,7 @@ app.use('/api/settings', settingsRoutes);
 app.use('/api/audit-logs', auditRoutes);
 app.use('/api/shift-schedules', shiftScheduleRoutes);
 app.use('/api/costing', costingRoutes);
+app.use('/api/tables', tableRoutes);
 
 // Error handlers
 app.use(notFound);
